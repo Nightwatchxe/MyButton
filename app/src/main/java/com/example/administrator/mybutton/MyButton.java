@@ -1,10 +1,13 @@
 package com.example.administrator.mybutton;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 import android.util.AttributeSet;
+
+import java.util.zip.CheckedOutputStream;
 
 
 /**
@@ -49,20 +52,31 @@ public class MyButton extends TextView implements View.OnClickListener {
     public void setClickMyButtonListener(ClickMyButtonListener mListener){
         this.mListener=mListener;
     }
-    private static int count=0;
+    static int count=0;
     @Override
     public void onClick(View v) {
-        mBean.setCheck(true);
+
         count++;
         this.setBackgroundColor(Color.WHITE);
         if (count==2){
             count=0;
-            mBean.setCheck(false);
             this.setBackgroundColor(Color.BLUE);
 
             if (mListener!=null){
                 mListener.onClick(mBean);
             }
         }
+
+       new Thread(new Runnable(){
+           @Override
+           public void run() {
+               try {
+                   Thread.sleep(500);
+                   count=0;
+               } catch (InterruptedException e) {
+                   e.printStackTrace();
+               }
+           }
+       }).start();
     }
 }
